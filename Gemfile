@@ -4,6 +4,7 @@ ruby '2.0.0'
 
 gem 'rails', '4.0.3'
 gem 'pg', '0.15.1'
+gem 'bootstrap-sass', '2.3.2.0'
 
 
 group :development, :test do
@@ -21,7 +22,8 @@ group :test do
   gem 'growl', '1.0.3'
 end
 
-gem 'sass-rails', '4.0.1'
+# needed '~> 4.0.0' to use bootstrap
+gem 'sass-rails', '~> 4.0.0'
 gem 'uglifier', '2.1.1'
 gem 'coffee-rails', '4.0.1'
 gem 'jquery-rails', '3.0.4'
