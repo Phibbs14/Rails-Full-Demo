@@ -43,18 +43,17 @@ describe "Authentication" do
             it "should render the desired protected page" do
               expect(page).to have_title('Edit user')
             end
-          end
-        end
 
-        describe "as non-admin user" do
-          let(:user) { FactoryGirl.create(:user) }          
-          let(:non_admin){ FactoryGirl.create(:user) }
+            describe "when signing in again" do
+              before do
+                click_link "Sign out"
+                sign_in user
+              end
 
-          before { sign_in non_admin, no_capybara: true }
-
-          describe "submitting a DELETE request to the Users#destroy action" do
-            before { delete user_path(user) }
-            specify { expect(response).to redirect_to(root_url) }
+              it "should render the default (profile) page" do
+                expect(page).to have_title(user.name)
+              end
+            end
           end
         end
       end
@@ -84,6 +83,8 @@ describe "Authentication" do
   			before { click_button "Sign in" }
 
   			it { should have_title('Sign in') }
+        it { should_not have_link('Profile') }
+        it { should_not have_link('Settings') }
   			it { should have_error_message('Invalid') }
 
   			describe "after visiting another page" do
@@ -110,4 +111,25 @@ describe "Authentication" do
         end
   		end
   	end
+
+    describe "as non-admin user" do
+      let(:user) { FactoryGirl.create(:user) }          
+      let(:non_admin){ FactoryGirl.create(:user) }
+
+      before { sign_in non_admin, no_capybara: true }
+
+      describe "submitting a DELETE request to the Users#destroy action" do
+        before { delete user_path(user) }
+        specify { expect(response).to redirect_to(root_url) }
+      end
+    end
+
+    describe "as admin user" do
+      let(:admin){ FactoryGirl.create(:admin) }
+      before { sign_in admin }
+      describe "attempting to delete oneself" do
+        before { delete user_path(admin) }
+        specify { expect(response).to redirect_to(root_url) }
+      end
+    end
 end
